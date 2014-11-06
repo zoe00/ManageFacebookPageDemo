@@ -1,0 +1,3 @@
+Instructions for developer:
+
+Please enter FB App ID in strings file under res folder.
