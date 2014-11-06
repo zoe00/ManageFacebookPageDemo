@@ -80,6 +80,7 @@ import com.facebook.widget.ProfilePictureView;
 public class HelloFacebookSampleActivity extends FragmentActivity {
 
 	private static final String PERMISSION = "manage_pages";
+	private static final String PAGE_NAME = "YOUR PAGE NAME HERE"; // let's say Paul Walker, Minnions or whatever the name is
 	static final int REQUEST_IMAGE_CAPTURE = 9900;
 
 	private final String PENDING_ACTION_BUNDLE_KEY = "com.facebook.samples.hellofacebook:PendingAction";
@@ -133,7 +134,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN); 
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		uiHelper = new UiLifecycleHelper(this, callback);
 		uiHelper.onCreate(savedInstanceState);
 
@@ -177,7 +178,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 		postStatusUpdateButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				Session session = Session.getActiveSession();
-				if (session != null) 
+				if (session != null)
 					onClickPostStatusUpdate();
 				else
 					Util.showInfoDialog(context, "Please login with Facebook first.");
@@ -203,10 +204,10 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 			public void onClick(View view) {
 				Session session = Session.getActiveSession();
 				if(!Util.isNetworkAvailable(context))
-					Util.showWifiDialog(context);	
+					Util.showWifiDialog(context);
 				else if(et.getText().toString().length()==0)
-					Util.showInfoDialog(context, "Please enter text to share with this selfie.");					
-				else if(session == null || !session.isOpened()) 
+					Util.showInfoDialog(context, "Please enter text to share with this selfie.");
+				else if(session == null || !session.isOpened())
 					Util.showInfoDialog(context, "Please login with Facebook first.");
 				else
 					initCapturePhoto(REQUEST_IMAGE_CAPTURE);
@@ -252,7 +253,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
 			startActivityForResult(takePictureIntent, request_type);
-		}	
+		}
 	}
 
 	@Override
@@ -345,7 +346,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 			break;
 		case POST_PHOTO_ON_PAGE:
 			if(accessToken!=null && accessToken.length()!=0)
-				onClickPublishPhotoOnPage(); 
+				onClickPublishPhotoOnPage();
 			else
 				requestAccessToken();
 			break;
@@ -377,7 +378,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 												JSONObject obj=new JSONObject(response.getRawResponse());
 												JSONArray arr = obj.getJSONArray("data");
 												for (int i = 0; i < arr.length(); i++) {
-													if(arr.getJSONObject(i).getString("name").equalsIgnoreCase("OSAF")){
+													if(arr.getJSONObject(i).getString("name").equalsIgnoreCase(PAGE_NAME)){
 														accessToken=arr.getJSONObject(i).getString("access_token");
 														break;
 													}
@@ -386,15 +387,15 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 												e.printStackTrace();
 											}
 											if(accessToken!=null && accessToken.length()!=0)
-												onClickPublishPhotoOnPage();  
-											else		
+												onClickPublishPhotoOnPage();
+											else
 												Util.showInfoDialog(context, "Oops, post unsuccessful. Please retry or contact App support team.");
 										}
 										else
 											Util.showInfoDialog(context, "Oops, post unsuccessful. Please retry or contact App support team.");
 									}
 								}
-								).executeAsync();		
+								).executeAsync();
 					}
 					else{
 						dialogBar.dismiss();
@@ -566,10 +567,10 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 	}
 
 	private void onClickPublishPhotoOnPage() {
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();  
-		Util.bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);		
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		Util.bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
 		Bundle postParams = new Bundle();
-		postParams.putString("message", et.getText().toString());  
+		postParams.putString("message", et.getText().toString());
 		postParams.putParcelable("picture", Util.bitmap);
 		postParams.putString("access_token", accessToken);
 		final ProgressBarDialog dialogBar = new ProgressBarDialog(this, "Cruising...");
@@ -593,7 +594,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 
 	protected void refreshUI() {
 		et.setText("");
-		Util.bitmap=null;		
+		Util.bitmap=null;
 	}
 
 	private void setPlacePickerListeners(final PlacePickerFragment fragment) {
